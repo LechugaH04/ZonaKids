@@ -1,0 +1,147 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zona Kids | Gestión Educativa</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1t4D55CHD9eOacPMEiEIJ46FCz0fPBWE",
+            authDomain: "zona-kids-b73bd.firebaseapp.com",
+            projectId: "zona-kids-b73bd",
+            storageBucket: "zona-kids-b73bd.firebasestorage.app",
+            messagingSenderId: "138494668611",
+            appId: "1:138494668611:web:e28863bf6605b1084949f6",
+            measurementId: "G-0XYMS6GREY"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .min-h-screen-custom {
+            min-height: calc(100vh - 4rem);
+        }
+    </style>
+</head>
+
+<body class="bg-base-300 font-sans">
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-base-300">
+        <div class="card w-96 bg-base-100 shadow-2xl border border-white/5">
+            <div class="card-body">
+                <div class="flex flex-col items-center mb-6">
+                    <div class="bg-primary text-primary-content rounded-xl p-3 font-black text-2xl mb-2">ZK</div>
+                    <h2 class="text-2xl font-bold">KID ZONE</h2>
+                    <p class="text-sm opacity-60">Ingresa a tu panel de gestión</p>
+                </div>
+
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text">Correo Electrónico</span></label>
+                    <input type="email" id="login-email" placeholder="admin@zonakids.com"
+                        class="input input-bordered w-full" />
+                </div>
+
+                <div class="form-control w-full mt-2">
+                    <label class="label"><span class="label-text">Contraseña</span></label>
+                    <input type="password" id="login-pass" placeholder="••••••••" class="input input-bordered w-full" />
+                </div>
+
+                <div class="card-actions flex-col gap-2 mt-8">
+                    <button onclick="ejecutarLogin()" class="btn btn-primary w-full">Entrar</button>
+                    <button onclick="cambiarARegistro()" class="btn btn-ghost btn-sm w-full opacity-50">¿No tienes
+                        cuenta? Contacta al soporte</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="drawer lg:drawer-open">
+        <input id="menu-toggle" type="checkbox" class="drawer-toggle" />
+
+        <div class="drawer-content flex flex-col">
+
+            <div class="navbar bg-base-100 lg:hidden shadow-md">
+                <div class="flex-none">
+                    <label for="menu-toggle" class="btn btn-square btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="inline-block w-6 h-6 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </label>
+                </div>
+                <div class="flex-1">
+                    <a class="btn btn-ghost text-xl text-primary font-bold">KID ZONE</a>
+                </div>
+            </div>
+
+            <main id="main-content" class="p-6 md:p-10 min-h-screen-custom">
+                <div id="loader-inicio" class="flex flex-col items-center justify-center h-64 opacity-30">
+                    <span class="loading loading-spinner loading-lg"></span>
+                    <p class="mt-4 italic">Cargando panel personalizado...</p>
+                </div>
+            </main>
+
+            <footer class="footer footer-center p-4 bg-base-300 text-base-content opacity-50">
+                <aside>
+                    <p>© 2026 - Zona Kids - Sistema de Gestión Escolar</p>
+                </aside>
+            </footer>
+        </div>
+
+        <div class="drawer-side">
+            <label for="menu-toggle" aria-label="close sidebar" class="drawer-overlay"></label>
+            <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content border-right border-white/5">
+                <div class="flex items-center gap-3 px-4 py-6 mb-4">
+                    <div class="bg-primary text-primary-content rounded-xl p-2 font-black text-xl">ZK</div>
+                    <span class="text-2xl font-bold tracking-tighter">ZONA KIDS</span>
+                </div>
+
+                <li class="menu-title opacity-50 uppercase text-xs font-bold tracking-widest mt-4">Operaciones</li>
+                <li>
+                    <a onclick="vistaRegistro()" class="flex gap-4 py-4 hover:bg-primary/10 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Registro y Salud
+                    </a>
+                </li>
+                <li>
+                    <a onclick="vistaAsistencia()" class="flex gap-4 py-4 hover:bg-primary/10 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                        Control Asistencia
+                    </a>
+                </li>
+
+                <li class="menu-title opacity-50 uppercase text-xs font-bold tracking-widest mt-8">Administración</li>
+                <li>
+                    <a onclick="vistaRoles()" class="flex gap-4 py-4 hover:bg-primary/10 transition-all text-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Gestión de Roles
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
