@@ -1,0 +1,35 @@
+
+services:
+  frontend-zona-kids:
+    container_name: zona-kids-frontend
+    build:
+      context: ./frontend
+    ports:
+      - "3101:80"
+    volumes:
+      - ./frontend/src:/usr/share/nginx/html:ro
+    depends_on:
+      - backend-zona-kids
+    networks:
+      - internal
+    restart: unless-stopped
+
+  backend-zona-kids:
+    container_name: zona-kids-backend
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    expose:
+      - "3601"
+    environment:
+      - API_KEY=${API_KEY}
+
+    networks:
+      - internal
+    restart: unless-stopped
+
+networks:
+  internal:
+    driver: bridge
