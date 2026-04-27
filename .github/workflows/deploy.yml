@@ -20,10 +20,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: ${{ secrets.SSH_PORT }}
-          script: 
+          script: |
             cd ${{ secrets.WORK_DIR }}
             git fetch
             git checkout ${{ secrets.MAIN_BRANCH}}
-            git pull
+            git pull origin ${{ secrets.MAIN_BRANCH}}
             docker compose up -d --build
             exit
