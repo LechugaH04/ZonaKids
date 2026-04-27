@@ -1,5 +1,5 @@
 const mainContent = document.getElementById('main-content');
-const API_URL = 'http://localhost:5000/api';
+const API_URL = '/api';
 
 // --- GESTIÓN DE SESIÓN ---
 let usuarioActual = JSON.parse(localStorage.getItem('usuarioZK')) || null;

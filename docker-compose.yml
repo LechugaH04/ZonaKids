@@ -5,7 +5,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3101:80"
+      - "3104:80"
     volumes:
       - ./frontend/src:/usr/share/nginx/html:ro
     depends_on:
@@ -22,9 +22,9 @@ services:
       - ./backend:/app
       - /app/node_modules
     expose:
-      - "3601"
-    environment:
-      - API_KEY=${API_KEY}
+      - "3604"
+    env_file:
+      - ./backend/.env
 
     networks:
       - internal

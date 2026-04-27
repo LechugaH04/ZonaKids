@@ -6,8 +6,8 @@ COPY package.json .
 
 RUN npm install
 
-COPY src/ .
+COPY src .
 
 RUN npm install express
 
-CMD ["node", "index.js"]
+CMD ["node", "src/app.js"]
