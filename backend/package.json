@@ -3,14 +3,19 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.4.1",
     "firebase": "^12.12.0",
-    "firebase-admin": "^13.8.0"
+    "firebase-admin": "^13.8.0",
+    "helmet": "^8.1.0",
+    "mongo-sanitize": "^1.1.0",
+    "xss-clean": "^0.1.4"
   },
   "name": "zona_kids",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000P\u0000r\u0000o\u0000y\u0000e\u0000c\u0000t\u0000o\u0000 \u0000Z\u0000o\u0000n\u0000a\u0000 \u0000K\u0000i\u0000d\u0000s\u0000\r\u0000 \u0000P\u0000R\u0000U\u0000E\u0000B\u0000A\u0000 \u0000D\u0000E\u0000 \u0000C\u0000O\u0000N\u0000E\u0000X\u0000I\u0000O\u0000N\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/LechugaH04/ZonaKids/issues"
   },
-  "homepage": "https://github.com/LechugaH04/ZonaKids#readme"
+  "homepage": "https://github.com/LechugaH04/ZonaKids#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }

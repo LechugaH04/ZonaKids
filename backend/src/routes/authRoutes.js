@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const admin = require('firebase-admin');
 const authController = require('../controllers/authController');
+const { verificarRol } = require('../middlewares/authMiddleware');
 
-router.post('/registro', authController.registrarUsuario);
-
+router.post('/registro', verificarRol(['admin']), authController.registrarUsuario);
+router.get('/verificar', authController.verificarSesion);
 
 module.exports = router;

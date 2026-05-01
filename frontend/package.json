@@ -1,0 +1,13 @@
+{
+  "name": "zona-kids-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para Zona Kids",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve src -p 3000",
+    "dev": "serve src -p 3000"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}

@@ -1,11 +1,7 @@
-// src/controllers/estudianteController.js
-const admin = require('firebase-admin');
+const { db, admin } = require('../config/firebase');
 
 exports.obtenerEstudiantes = async (req, res) => {
     try {
-        // Obtenemos la instancia de la base de datos
-        const db = admin.firestore();
-        
         console.log("Consultando estudiantes en Firestore...");
         const snapshot = await db.collection('estudiantes').get();
         
@@ -24,23 +20,24 @@ exports.obtenerEstudiantes = async (req, res) => {
 
     } catch (error) {
         console.error("ERROR EN FIREBASE:", error.message);
-        // Enviamos el detalle para saber POR QUÉ falló (permisos, conexión, etc.)
         return res.status(500).json({ error: error.message });
     }
 };
 
 exports.registroIntegral = async (req, res) => {
     try {
-        const db = admin.firestore();
         const { estudiante, acudiente } = req.body;
         
         console.log("Iniciando registro integral...");
         
         // 1. Guardar Estudiante
-        const docEst = await db.collection('estudiantes').add(estudiante);
+        const docEst = await db.collection('estudiantes').add({
+            ...estudiante,
+            fechaRegistro: admin.firestore.FieldValue.serverTimestamp()
+        });
         const idHijo = docEst.id;
 
-        // 2. Lógica de Acudiente (Simplificada para que no falle)
+        // 2. Lógica de Acudiente
         if (acudiente.esNuevo) {
             const userRecord = await admin.auth().createUser({
                 email: acudiente.email,
@@ -53,48 +50,20 @@ exports.registroIntegral = async (req, res) => {
                 cedula: acudiente.cedula,
                 email: acudiente.email,
                 rol: 'padre',
-                estudiantes: [idHijo]
+                estudiantes: [idHijo],
+                fechaCreacion: admin.firestore.FieldValue.serverTimestamp(),
+                activo: true
+            });
+        } else if (acudiente.uid) {
+            // Si el acudiente ya existe, vinculamos al nuevo estudiante
+            await db.collection('usuarios').doc(acudiente.uid).update({
+                estudiantes: admin.firestore.FieldValue.arrayUnion(idHijo)
             });
         }
 
-        return res.status(201).json({ success: true });
+        return res.status(201).json({ success: true, mensaje: "Registro integral completado" });
     } catch (error) {
         console.error("Error en registro integral:", error.message);
         return res.status(500).json({ error: error.message });
-    }
-};
-
-const { db } = require('../config/firebase');
-
-exports.buscarPorCedula = async (req, res) => {
-    try {
-        const { cedula } = req.params;
-        console.log(`Buscando acudiente con cédula: ${cedula}`);
-
-        // Buscamos en la colección 'usuarios' donde la cédula coincida
-        const snapshot = await db.collection('usuarios')
-            .where('cedula', '==', cedula)
-            .limit(1) // Solo necesitamos uno
-            .get();
-
-        if (snapshot.empty) {
-            return res.status(404).json({ mensaje: "Usuario no encontrado" });
-        }
-
-        // Extraemos los datos del primer (y único) resultado
-        const usuarioDoc = snapshot.docs[0];
-        const usuarioData = usuarioDoc.data();
-
-        // Enviamos los datos necesarios al frontend
-        return res.status(200).json({
-            id: usuarioDoc.id,
-            nombre: usuarioData.nombre,
-            email: usuarioData.email,
-            rol: usuarioData.rol
-        });
-
-    } catch (error) {
-        console.error("Error al buscar cédula:", error);
-        return res.status(500).json({ error: "Error interno del servidor" });
     }
 };
